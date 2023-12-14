@@ -7,24 +7,34 @@ import '../models/movie_meta.dart';
 
 sealed class FetchType {
   final String path;
-  FetchType(this.path);
-  factory FetchType.popular() => Popular("popular");
-  factory FetchType.nowPlaying() => NowPlaying("now-playing");
-  factory FetchType.comingSoon() => ComingSoon("coming-soon");
+  final String title;
+  FetchType(this.path, this.title);
+  factory FetchType.popular() => Popular("popular", "Popular Movies");
+  factory FetchType.nowPlaying() => NowPlaying("now-playing", "Now in Cinemas");
+  factory FetchType.comingSoon() => ComingSoon("coming-soon", "Coming soon");
 
   getUrl() => 'https://movies-api.nomadcoders.workers.dev/$path';
 }
 
 class Popular extends FetchType {
-  Popular(super.path);
+  Popular(
+    super.path,
+    super.title,
+  );
 }
 
 class NowPlaying extends FetchType {
-  NowPlaying(super.path);
+  NowPlaying(
+    super.path,
+    super.title,
+  );
 }
 
 class ComingSoon extends FetchType {
-  ComingSoon(super.path);
+  ComingSoon(
+    super.path,
+    super.title,
+  );
 }
 
 class ApiService {

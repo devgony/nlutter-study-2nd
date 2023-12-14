@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:movieflix/services/api_service.dart';
 
 import '../models/movie_meta.dart';
 import '../screens/detail_screen.dart';
 import '../utils/tag_builder.dart';
 
+enum ImageType {
+  square(150, 150),
+  landscape(220, 320);
+
+  final double height;
+  final double width;
+  const ImageType(
+    this.height,
+    this.width,
+  );
+}
+
 class MovieCardWidget extends StatelessWidget {
   const MovieCardWidget({
     super.key,
-    required this.movieApiFuture,
-    required this.title,
-    required this.imageHeight,
-    required this.imageWidth,
+    required this.fetchType,
+    required this.imageType,
     this.isDisplayTitle = true,
   });
 
-  final Future<List<SimpleMovie>> movieApiFuture;
-  final String title;
-  final double imageHeight;
-  final double imageWidth;
+  final FetchType fetchType;
+  final ImageType imageType;
   final bool isDisplayTitle;
 
   @override
@@ -28,14 +37,18 @@ class MovieCardWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20),
           child: Text(
-            title,
+            fetchType.title,
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         SizedBox(
-          height: isDisplayTitle ? (imageHeight + 80) : (imageHeight + 10),
+          height: imageType.height +
+              switch (isDisplayTitle) {
+                true => 80,
+                false => 10,
+              },
           child: FutureBuilder(
-            future: movieApiFuture,
+            future: ApiService.getMovies(fetchType),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,17 +65,17 @@ class MovieCardWidget extends StatelessWidget {
               }
               if (!snapshot.hasData) {
                 return _EmptyCardListWidget(
-                  imageWidth: imageWidth,
-                  imageHeight: imageHeight,
+                  imageWidth: imageType.width,
+                  imageHeight: imageType.height,
                   isDisplayTitle: isDisplayTitle,
                 );
               }
               return _CardListWidget(
-                imageWidth: imageWidth,
-                imageHeight: imageHeight,
+                imageWidth: imageType.width,
+                imageHeight: imageType.height,
                 isDisplayTitle: isDisplayTitle,
                 movies: snapshot.data!,
-                middleTag: title,
+                middleTag: fetchType.title,
               );
             },
           ),
