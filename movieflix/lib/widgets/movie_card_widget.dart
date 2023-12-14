@@ -37,6 +37,19 @@ class MovieCardWidget extends StatelessWidget {
           child: FutureBuilder(
             future: movieApiFuture,
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(snapshot.error.toString()),
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                });
+                return const Center(
+                  child: Text('Something went wrong'),
+                );
+              }
               if (!snapshot.hasData) {
                 return _EmptyCardListWidget(
                   imageWidth: imageWidth,
