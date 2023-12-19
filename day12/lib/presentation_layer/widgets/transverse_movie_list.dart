@@ -4,8 +4,11 @@ import 'package:day12/presentation_layer/index.dart';
 import 'package:flutter/material.dart';
 
 class TransverseMovieList extends StatelessWidget {
-  final String path;
-  const TransverseMovieList({super.key, required this.path});
+  final MovieType movieType;
+  const TransverseMovieList({
+    super.key,
+    required this.movieType,
+  });
 
   static const height = 250.0;
   static const imageHeight = 200.0;
@@ -14,24 +17,48 @@ class TransverseMovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: FutureBuilder(
-        future: fetchMovies(path),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final movies = snapshot.data;
-            return _movieListView(movies);
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Something went wrong'),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _title(movieType.title),
+        SizedBox(
+          height: height,
+          child: FutureBuilder(
+            future: fetchMovies(movieType),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final movies = snapshot.data;
+                return _movieListView(movies);
+              } else if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(snapshot.error.toString())),
+                  );
+                });
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _title(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

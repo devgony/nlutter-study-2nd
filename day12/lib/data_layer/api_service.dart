@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:day12/presentation_layer/home_page.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'models/index.dart';
 
@@ -7,28 +9,25 @@ const _movieListUrl = 'https://movies-api.nomadcoders.workers.dev';
 const _movieDetailUrl = 'https://movies-api.nomadcoders.workers.dev/movie';
 const _moviePosterUrl = 'https://image.tmdb.org/t/p/w500';
 
-Future<List<Movie>> fetchMovies(String path) async {
+Future<List<Movie>> fetchMovies(MovieType movieType) async {
   try {
-    final parsedUrl = Uri.parse('$_movieListUrl/$path');
+    final parsedUrl = Uri.parse('$_movieListUrl/${movieType.path}');
     final response = await http.get(parsedUrl);
-    if (response.statusCode == 200) {
-      final movies = <Movie>[];
-      final json = jsonDecode(response.body);
-      for (final movie in json['results']) {
-        movies.add(Movie.fromJson(movie));
-      }
-      return movies;
-    } else {
-      throw Exception('Failed to load movies');
+    if (response.statusCode != 200) {
+      throw Exception();
     }
+    final json = jsonDecode(response.body);
+    return json['results'].map<Movie>((r) => Movie.fromJson(r)).toList();
   } catch (e) {
+    debugPrint(e.toString());
     throw Exception('Failed to load movies');
   }
 }
 
 Future<MovieDetail> fetchMovieDetail(String id) async {
   try {
-    final parsedUrl = Uri.parse(_movieDetailUrl).replace(queryParameters: {'id': id});
+    final parsedUrl =
+        Uri.parse(_movieDetailUrl).replace(queryParameters: {'id': id});
 
     print(parsedUrl);
     final response = await http.get(parsedUrl);
