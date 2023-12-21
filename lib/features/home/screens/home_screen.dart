@@ -1,5 +1,4 @@
 import 'package:deviflix/core/core.dart';
-import 'package:deviflix/features/components/cinema_background.dart';
 import 'package:deviflix/features/components/movie_list.dart';
 import 'package:deviflix/features/components/movie_title.dart';
 import 'package:deviflix/features/home/functions/get_coming_soon.dart';
