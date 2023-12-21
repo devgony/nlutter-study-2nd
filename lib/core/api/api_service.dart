@@ -1,3 +1,5 @@
+import 'package:deviflix/features/home/screens/home_screen.dart';
+
 import '../../model/movie_detail_model.dart';
 import '../../model/movie_model.dart';
 import 'package:http/http.dart' as http;
@@ -5,22 +7,22 @@ import 'dart:convert';
 
 class ApiService {
   static String baseUrl = "https://movies-api.nomadcoders.workers.dev";
-  static String popular = "popular";
-  static String nowPlaying = "now-playing";
-  static String upcoming = "coming-soon";
+  // static String popular = "popular";
+  // static String nowPlaying = "now-playing";
+  // static String upcoming = "coming-soon";
   static String movie = "movie";
 
-  static Future<List<MovieModel>> getMovies(String order) async {
+  static Future<List<MovieModel>> getMovies(MovieOrder order) async {
     List<MovieModel> movieInstances = [];
     // order = popular, nowPlaying, upcoming
-    if (order == "popular") {
-      order = popular;
-    } else if (order == "nowPlaying") {
-      order = nowPlaying;
-    } else if (order == "upcoming") {
-      order = upcoming;
-    }
-    final url = Uri.parse('$baseUrl/$order');
+    // if (order == "popular") {
+    //   order = popular;
+    // } else if (order == "nowPlaying") {
+    //   order = nowPlaying;
+    // } else if (order == "upcoming") {
+    //   order = upcoming;
+    // }
+    final url = Uri.parse('$baseUrl/${order.value}');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final movies = jsonDecode(utf8.decode(response.bodyBytes));

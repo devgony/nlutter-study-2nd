@@ -8,14 +8,24 @@ import '../../../core/api/api_service.dart';
 import '../../../model/movie_model.dart';
 import '../functions/get_popular_movies.dart';
 
+enum MovieOrder {
+  popular("popular"),
+  nowPlaying("now-playing"),
+  upcoming("coming-soon");
+
+  const MovieOrder(this.value);
+  final String value;
+}
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final Future<List<MovieModel>> popularMovies =
-      ApiService.getMovies("popular");
+      ApiService.getMovies(MovieOrder.popular);
   final Future<List<MovieModel>> nowPlaying =
-      ApiService.getMovies("nowPlaying");
-  final Future<List<MovieModel>> upcoming = ApiService.getMovies("upcoming");
+      ApiService.getMovies(MovieOrder.nowPlaying);
+  final Future<List<MovieModel>> upcoming =
+      ApiService.getMovies(MovieOrder.upcoming);
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +91,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-              Container(
-                alignment: Alignment.topCenter,
+              SizedBox(
                 height: 371,
                 child: FutureBuilder(
                   future: popularMovies,
@@ -96,75 +105,71 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
               ),
-              Column(
-                children: [
-                  Container(
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF262626),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF1D1D1D),
-                    ),
-                    height: 210,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 15,
+              Container(
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF262626),
+                ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF1D1D1D),
+                ),
+                height: 210,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/flame.png',
+                            width: 16,
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/images/flame.png',
-                                width: 16,
-                              ),
-                              const Gap(6),
-                              GradientText(
-                                'Now On Cinema',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: -0.5,
-                                ),
-                                colors: const [
-                                  Color(0xFFBC0404),
-                                  Color(0xFFFAFF00),
-                                ],
-                                gradientDirection: GradientDirection.btt,
-                              ),
+                          const Gap(6),
+                          GradientText(
+                            'Now On Cinema',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.5,
+                            ),
+                            colors: const [
+                              Color(0xFFBC0404),
+                              Color(0xFFFAFF00),
                             ],
+                            gradientDirection: GradientDirection.btt,
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 140,
-                          child: FutureBuilder(
-                            future: nowPlaying,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return getNowOnCinema(snapshot, 136, 96);
-                              }
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF262626),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 140,
+                      child: FutureBuilder(
+                        future: nowPlaying,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return getNowOnCinema(snapshot, 136, 96);
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              Container(
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF262626),
+                ),
               ),
               const SizedBox(height: 14),
               Padding(
