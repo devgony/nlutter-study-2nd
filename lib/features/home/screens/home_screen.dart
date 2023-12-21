@@ -1,4 +1,7 @@
 import 'package:deviflix/core/core.dart';
+import 'package:deviflix/features/components/cinema_background.dart';
+import 'package:deviflix/features/components/movie_list.dart';
+import 'package:deviflix/features/components/movie_title.dart';
 import 'package:deviflix/features/home/functions/get_coming_soon.dart';
 import 'package:deviflix/features/home/functions/get_now_on_cinema.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +12,46 @@ import '../../../model/movie_model.dart';
 import '../functions/get_popular_movies.dart';
 
 enum MovieOrder {
-  popular("popular"),
-  nowPlaying("now-playing"),
-  upcoming("coming-soon");
+  popular(
+    value: "popular",
+    imagePath: '',
+    height: 371,
+  ),
+  nowPlaying(
+    value: "now-playing",
+    title: 'Now On Cinema',
+    imagePath: 'assets/images/flame.png',
+    left: 15,
+    width: 16,
+    height: 140,
+    crossAxisAlignment: CrossAxisAlignment.start,
+  ),
+  upcoming(
+    value: "coming-soon",
+    title: 'Coming Soon',
+    imagePath: "assets/images/ddoza.png",
+    left: 10,
+    width: 22,
+    height: 170,
+    crossAxisAlignment: CrossAxisAlignment.center,
+  );
 
-  const MovieOrder(this.value);
+  const MovieOrder({
+    required this.value,
+    this.title = '',
+    required this.imagePath,
+    this.left = 0,
+    this.width,
+    required this.height,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+  });
   final String value;
+  final String title;
+  final String imagePath;
+  final double left;
+  final double? width;
+  final double height;
+  final CrossAxisAlignment crossAxisAlignment;
 }
 
 class HomeScreen extends StatelessWidget {
@@ -91,124 +128,30 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-              SizedBox(
-                height: 371,
-                child: FutureBuilder(
-                  future: popularMovies,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return PopularMoviesView(snapshot: snapshot);
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF262626),
-                ),
-              ),
+              const MovieList(movieOrder: MovieOrder.popular),
               Container(
                 decoration: const BoxDecoration(
                   color: Color(0xFF1D1D1D),
+                  border: Border.symmetric(
+                    horizontal: BorderSide(
+                      width: 8,
+                      color: Color(0xFF262626),
+                    ),
+                  ),
                 ),
                 height: 210,
-                child: Column(
+                child: const Column(
                   children: [
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/images/flame.png',
-                            width: 16,
-                          ),
-                          const Gap(6),
-                          GradientText(
-                            'Now On Cinema',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.5,
-                            ),
-                            colors: const [
-                              Color(0xFFBC0404),
-                              Color(0xFFFAFF00),
-                            ],
-                            gradientDirection: GradientDirection.btt,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 140,
-                      child: FutureBuilder(
-                        future: nowPlaying,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return getNowOnCinema(snapshot, 136, 96);
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
-                    ),
+                    SizedBox(height: 10),
+                    MoiveTitle(movieOrder: MovieOrder.nowPlaying),
+                    SizedBox(height: 10),
+                    MovieList(movieOrder: MovieOrder.nowPlaying),
                   ],
-                ),
-              ),
-              Container(
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF262626),
                 ),
               ),
               const SizedBox(height: 14),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/ddoza.png',
-                      width: 22,
-                    ),
-                    const Gap(6),
-                    const Text(
-                      'Coming Soon',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 170,
-                child: FutureBuilder(
-                  future: upcoming,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return getComingSoon(snapshot, 86, 131);
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ),
+              const MoiveTitle(movieOrder: MovieOrder.upcoming),
+              const MovieList(movieOrder: MovieOrder.upcoming),
               const SizedBox(height: 40),
             ],
           ),
