@@ -1,4 +1,5 @@
 import 'package:deviflix/core/api/api_service.dart';
+import 'package:deviflix/features/components/movie_title.dart';
 import 'package:deviflix/features/home/functions/get_coming_soon.dart';
 import 'package:deviflix/features/home/functions/get_now_on_cinema.dart';
 import 'package:deviflix/features/home/functions/get_popular_movies.dart';
@@ -11,30 +12,41 @@ class MovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: movieOrder.height,
-      child: FutureBuilder(
-        future: ApiService.getMovies(movieOrder),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('An error occurred while loading the movies'),
-              ),
-            );
-          }
-          if (snapshot.hasData) {
-            return switch (movieOrder) {
-              MovieOrder.popular => PopularMoviesView(snapshot: snapshot),
-              MovieOrder.nowPlaying => getNowOnCinema(snapshot, 136, 96),
-              MovieOrder.upcoming => getComingSoon(snapshot, 86, 131),
-            };
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+    return Column(
+      children: [
+        switch (movieOrder) {
+          MovieOrder.popular => const SizedBox.shrink(),
+          MovieOrder.nowPlaying => const SizedBox(height: 10),
+          MovieOrder.upcoming => const SizedBox(height: 14),
         },
-      ),
+        MoiveTitle(movieOrder: movieOrder),
+        if (movieOrder == MovieOrder.nowPlaying) const SizedBox(height: 10),
+        SizedBox(
+          height: movieOrder.height,
+          child: FutureBuilder(
+            future: ApiService.getMovies(movieOrder),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('An error occurred while loading the movies'),
+                  ),
+                );
+              }
+              if (snapshot.hasData) {
+                return switch (movieOrder) {
+                  MovieOrder.popular => PopularMoviesView(snapshot: snapshot),
+                  MovieOrder.nowPlaying => getNowOnCinema(snapshot, 136, 96),
+                  MovieOrder.upcoming => getComingSoon(snapshot, 86, 131),
+                };
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

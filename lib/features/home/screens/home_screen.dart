@@ -52,6 +52,26 @@ enum MovieOrder {
   final double? width;
   final double height;
   final CrossAxisAlignment crossAxisAlignment;
+
+  Widget build() {
+    final child = MovieList(movieOrder: this);
+    return switch (this) {
+      MovieOrder.nowPlaying => Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF1D1D1D),
+            border: Border.symmetric(
+              horizontal: BorderSide(
+                width: 8,
+                color: Color(0xFF262626),
+              ),
+            ),
+          ),
+          height: 210,
+          child: child,
+        ),
+      _ => child,
+    };
+  }
 }
 
 class HomeScreen extends StatelessWidget {
@@ -128,30 +148,9 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-              const MovieList(movieOrder: MovieOrder.popular),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF1D1D1D),
-                  border: Border.symmetric(
-                    horizontal: BorderSide(
-                      width: 8,
-                      color: Color(0xFF262626),
-                    ),
-                  ),
-                ),
-                height: 210,
-                child: const Column(
-                  children: [
-                    SizedBox(height: 10),
-                    MoiveTitle(movieOrder: MovieOrder.nowPlaying),
-                    SizedBox(height: 10),
-                    MovieList(movieOrder: MovieOrder.nowPlaying),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              const MoiveTitle(movieOrder: MovieOrder.upcoming),
-              const MovieList(movieOrder: MovieOrder.upcoming),
+              ...MovieOrder.values
+                  .map((movieOrder) => movieOrder.build())
+                  .toList(),
               const SizedBox(height: 40),
             ],
           ),
