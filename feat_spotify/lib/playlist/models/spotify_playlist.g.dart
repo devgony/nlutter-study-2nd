@@ -7,8 +7,7 @@ part of 'spotify_playlist.dart';
 // **************************************************************************
 
 _$SpotifyPlaylistImpl _$$SpotifyPlaylistImplFromJson(
-  Map<String, dynamic> json,
-) =>
+        Map<String, dynamic> json) =>
     _$SpotifyPlaylistImpl(
       collaborative: json['collaborative'] as bool,
       description: json['description'] as String,
@@ -31,8 +30,7 @@ _$SpotifyPlaylistImpl _$$SpotifyPlaylistImplFromJson(
     );
 
 Map<String, dynamic> _$$SpotifyPlaylistImplToJson(
-  _$SpotifyPlaylistImpl instance,
-) =>
+        _$SpotifyPlaylistImpl instance) =>
     <String, dynamic>{
       'collaborative': instance.collaborative,
       'description': instance.description,
@@ -144,8 +142,7 @@ _$ItemImpl _$$ItemImplFromJson(Map<String, dynamic> json) => _$ItemImpl(
       primaryColor: json['primary_color'],
       track: Track.fromJson(json['track'] as Map<String, dynamic>),
       videoThumbnail: VideoThumbnail.fromJson(
-        json['video_thumbnail'] as Map<String, dynamic>,
-      ),
+          json['video_thumbnail'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$ItemImplToJson(_$ItemImpl instance) =>
@@ -271,8 +268,7 @@ _$VideoThumbnailImpl _$$VideoThumbnailImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$VideoThumbnailImplToJson(
-  _$VideoThumbnailImpl instance,
-) =>
+        _$VideoThumbnailImpl instance) =>
     <String, dynamic>{
       'url': instance.url,
     };

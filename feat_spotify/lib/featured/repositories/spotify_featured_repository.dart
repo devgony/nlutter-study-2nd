@@ -12,6 +12,7 @@ class SpotifyFeaturedRepository {
   Future<SpotifyFeaturedPlaylists> getFeaturedPlaylists(
     String authorization,
   ) async {
+    print("getFeaturedPlaylists");
     final json = await fetchData(
       SpotifyApiType.featuredPlaylists,
       query: {
