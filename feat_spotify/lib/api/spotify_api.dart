@@ -5,9 +5,6 @@ import 'package:http/http.dart' as http;
 const _accountsHost = 'accounts.spotify.com';
 const _apiHost = 'api.spotify.com';
 
-const spotifyClientId = '6650330c1f304546a18186f41866601e';
-const spotifyClientSecret = '4610593326b045b597dc53d587a665df';
-
 Future<dynamic> fetchData(
   SpotifyApiType apiType, {
   String? id,

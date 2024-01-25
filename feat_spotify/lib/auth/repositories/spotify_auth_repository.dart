@@ -2,6 +2,9 @@ import 'package:feat_spotify/api/spotify_api.dart';
 import 'package:feat_spotify/auth/models/spotify_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+const spotifyClientId = '6650330c1f304546a18186f41866601e';
+const spotifyClientSecret = '4610593326b045b597dc53d587a665df';
+
 final spotifyAuthRepoProvider = Provider(
   (ref) => SpotifyAuthRepository(),
 );
