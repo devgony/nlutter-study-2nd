@@ -164,59 +164,42 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         width: double.infinity,
         child: Column(
           children: [
-            GestureDetector(
-              onTap: _openDetail,
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.keyboard_arrow_up_rounded,
-                    size: 32,
-                  ),
-                  Text(
-                    'More',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              )
-                  .animate(
-                    target: _isDetail ? 1 : 0,
-                  )
-                  .fadeOut(),
-            ),
+            slideButton(SlideType.more),
             const Spacer(),
-            GestureDetector(
-              onTap: _openPlaylists,
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Playlists',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 32,
-                  ),
-                ],
-              )
-                  .animate(
-                    target: _isDetail ? 1 : 0,
-                  )
-                  .fadeIn(
-                    delay: 500.ms,
-                  ),
-            ),
+            slideButton(SlideType.playlists),
             const SizedBox(
               height: 50,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  GestureDetector slideButton(SlideType to) {
+    Animate column = Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(to.icon, size: 32),
+        Text(
+          to.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ).animate(
+      target: _isDetail ? 1 : 0,
+    );
+
+    final (void Function() onTap, Animate child) = switch (to) {
+      SlideType.more => (_openDetail, column.fadeOut()),
+      SlideType.playlists => (_openPlaylists, column.fadeIn(delay: 500.ms))
+    };
+
+    return GestureDetector(
+      onTap: onTap,
+      child: child,
     );
   }
 
@@ -236,4 +219,13 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           curve: Curves.easeInOutCubic,
         );
   }
+}
+
+enum SlideType {
+  more(name: "More", icon: Icons.keyboard_arrow_up_rounded),
+  playlists(name: "Playlists", icon: Icons.keyboard_arrow_down_rounded);
+
+  const SlideType({required this.name, required this.icon});
+  final String name;
+  final IconData icon;
 }
